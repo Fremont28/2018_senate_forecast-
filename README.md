@@ -11,4 +11,6 @@ A second version of this model will create an adjusted poll index based on the m
 
 It might also be useful to account for geographical voting patterns surrounding a given state. For example, Georgia would fall in the Republican cluster of states as it lies near conservative strongholds such as Mississippi and Alabama compared to New York or Rhode Island, which are geographically closer to other Democratic leaning states.  
 
-Read Here: https://beyondtheaverage.wordpress.com/2018/10/21/the-democrats-chances-of-winning-the-senate-are-slim/
+Read here: https://beyondtheaverage.wordpress.com/2018/10/21/the-democrats-chances-of-winning-the-senate-are-slim/
+
+and here https://beyondtheaverage.wordpress.com/2018/10/23/adjusting-our-2018-senate-forecast/
