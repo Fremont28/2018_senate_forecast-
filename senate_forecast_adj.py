@@ -1,8 +1,10 @@
 #10/21/18 ---------- adjusting for poll quality and state clustering 
 
 #import libraries
-from sklearn.cluster import KMeans
-
+import pandas as pd 
+import numpy as np 
+import sklearn 
+from sklearn.linear_model import LogisticRegressionfrom sklearn.cluster import KMeans
 
 #import train and test senate datasets
 sen16=pd.read_csv("senate16X.csv")
