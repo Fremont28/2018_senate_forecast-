@@ -1,5 +1,9 @@
 #10/21/18 ---------- adjusting for poll quality and state clustering 
 
+#import libraries
+from sklearn.cluster import KMeans
+
+
 #import train and test senate datasets
 sen16=pd.read_csv("senate16X.csv")
 sen18=pd.read_csv("senate18.csv")
@@ -13,8 +17,8 @@ sen16['diff_margin']=sen16['Final_Margin']-sen16['margin']
 #poll quality thresholds
 sen16_poll_adj=sen16[sen16.diff_margin<=20]
 
-sen16_poll_adj['diff_margin'].mean() #5.37
-sen16_poll_adj['diff_margin'].quantile(0.25) #1.70 
+sen16_poll_adj['diff_margin'].mean() 
+sen16_poll_adj['diff_margin'].quantile(0.25) 
 
 def poll_adj(x,y):
     if x<=1.70:
@@ -27,7 +31,6 @@ def poll_adj(x,y):
 #adjusted Republican and Democratic vote percentages (based on poll quality)
 sen16['adj_Rep']=np.vectorize(poll_adj)(sen16['diff_margin'],sen16['Rep'])
 sen16['adj_Dem']=np.vectorize(poll_adj)(sen16['diff_margin'],sen16['Dem'])
-
 sen16.to_csv("senate16_adj.csv")
 
 #ranking poll quality
@@ -88,13 +91,13 @@ results.columns=['Loss_Dem','Win_Dem']
 model_results=pd.concat([senate18,results],axis=1)
 model_state=model_results[["State","Loss_Dem","Win_Dem"]]
 
-#democrats' win probability average by state 
+#democrats win probability average by state 
 dem_win_prob=model_state.groupby('State')['Win_Dem'].mean() 
 dem_win_prob=pd.DataFrame(dem_win_prob) 
 dem_win_prob.reset_index(level=0,inplace=True)
 dem_win_prob.columns=['State','Win_Prob']
 
-#deomcrats' win probability std by state
+#deomcrats win probability std by state
 dem_win_std=model_state.groupby('State')['Win_Dem'].std() 
 dem_win_std.fillna(1)
 dem_win_std=pd.DataFrame(dem_win_std)
@@ -119,14 +122,11 @@ final_senate18['adjLow_win']=final_senate18['Low_Win'].apply(adj_high_low_win)
 
 final_senate18_sub=final_senate18[["State","Win_Prob","adjHigh_win","adjLow_win"]]
 
-
 ###10/22/18 *******************************
 #cluster states (similarity scores)
 sen16=pd.read_csv("senate16X.csv")
 sen18=pd.read_csv("senate18.csv")
 sen=pd.concat([sen16,sen18],axis=0)
-
-from sklearn.cluster import KMeans
 
 cluster_vars=sen[["Dem","Rep"]]
 kmeans=KMeans(n_clusters=3,random_state=0).fit(cluster_vars)
@@ -153,13 +153,13 @@ def state_group(x):
 senate18['state_group']=senate18['State'].apply(state_group)
 sen16_adj['state_group']=sen16_adj['State'].apply(state_group)
 
-#primero write to csv
+#first write to csv
 senate18.to_csv("senate_oct18.csv")
 sen16_adj.to_csv("senate_past.csv")
 senate_past=pd.read_csv("senate_past.csv")
 senate_18=pd.read_csv("senate_oct18.csv")
 
-####model with state groups
+#model with state groups
 X_train1=senate_past[["margin","adj_Rep_538","adj_Dem_538","state_group"]] 
 y_train1=senate_past['Win']
 X_test1=senate_18[["margin","adj_Rep_538","adj_Dem_538","state_group"]]
@@ -174,7 +174,7 @@ results.columns=['Loss_Dem','Win_Dem']
 model_results=pd.concat([senate18,results],axis=1)
 model_state=model_results[["State","Loss_Dem","Win_Dem"]]
 
-#democrats' win probability average by state 
+#democrats win probability average by state 
 dem_win_prob1=model_state.groupby('State')['Win_Dem'].mean() 
 dem_win_prob1=pd.DataFrame(dem_win_prob1) 
 dem_win_prob1.reset_index(level=0,inplace=True)
@@ -185,6 +185,7 @@ poll_count=senate_past['Poll'].value_counts()
 poll_count=pd.DataFrame(poll_count)
 poll_count.reset_index(level=0,inplace=True)
 poll_count.columns=['Poll','count']
+
 #poll accuracy 
 poll_acc=senate_past.groupby('Poll')['diff_margin'].mean() 
 poll_acc=pd.DataFrame(poll_acc)
@@ -192,35 +193,3 @@ poll_acc.reset_index(level=0,inplace=True)
 
 poll_final=pd.merge(poll_count,poll_acc,on="Poll")
 poll_final=poll_final[poll_final['count']>=20]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
