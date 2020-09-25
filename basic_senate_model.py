@@ -1,6 +1,7 @@
 
 #Unadjusted 2018 Senate Forecast - 10/21/18 ---------------
 
+#import libraries 
 import pandas as pd 
 import numpy as np 
 import sklearn 
@@ -37,7 +38,6 @@ merge_2012=pd.merge(s12_margin,s12_rep,on="State")
 merge_2012=pd.merge(merge_2012,s12_dem,on="State")
 merge_2012=pd.merge(merge_2012,s12_std,on="State")
 merge_2012=merge_2012[["State","margin","Rep","Dem","Error"]]
-
 s14=s_16[s_16.Year==2014] #2014 senate 
 
 #group by state 
@@ -63,7 +63,6 @@ merge_2014=pd.merge(s14_margin,s14_rep,on="State")
 merge_2014=pd.merge(merge_2014,s14_dem,on="State")
 merge_2014=pd.merge(merge_2014,s14_std,on="State")
 merge_2014=merge_2014[["State","margin","Rep","Dem","Error"]]
-
 s16=s_16[s_16.Year==2016] #2016 senate 
 
 #group by state 
@@ -90,24 +89,20 @@ merge_2016=pd.merge(merge_2016,s16_dem,on="State")
 merge_2016=pd.merge(merge_2016,s16_std,on="State")
 merge_2016=merge_2016[["State","margin","Rep","Dem","Error"]]
 
-
 #combine 2012, 2014, # 2016 dataframes 
 final_senate=pd.merge(merge_2012,merge_2014,on="State")
 final_senate.reset_index(level=0,inplace=True)
 final_senate.columns=['index','State','Margin_12','Rep_12','Dem_12','Error_12','Margin_16',
 'Rep_14','Dem_14','Error_14']
 final_senate.to_csv("final_senate1214.csv")
-
 combo_121416=pd.concat([merge_2012,merge_2014,merge_2016],axis=0)
 combo_121416.to_csv("senate_train.csv")
-
 
 ##### 2018 senate forecast
 s_2018=pd.read_csv("senate18.csv")
 s_2018['margin']=s_2018['Rep']-s_2018['Dem']
 
-#average by year and state***************
-#2018
+#average by year and state (2018) 
 s18=s_2018[s_2018.Year==2018]
 
 #group by state 
